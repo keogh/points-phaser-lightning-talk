@@ -6,6 +6,7 @@ var program = require('commander');
 
 var gulp = require('gulp');
 var jade = require('gulp-jade');
+var ignore = require('gulp-ignore');
 
 program
   .option('-p, --prod', 'enforce production environment')
@@ -16,10 +17,10 @@ gulp.task('build:all', [
   // 'build:audio',
   // 'build:fonts',
   // 'build:images',
-  'build:html'
+  'build:html',
   // 'build:js',
   // 'build:css',
-  // 'build:vendors'
+  'build:vendors'
 ]);
 
 gulp.task('build:html', function () {
@@ -38,7 +39,12 @@ gulp.task('build:html', function () {
 gulp.task('build:vendors', function () {
   var bowerConfig = JSON.parse(fs.readFileSync('./.bowerrc', 'utf8'));
 
-  return gulp.src('./' + bowerConfig['directory'] + '/phaser/build/phaser*')
+  var src = [
+    './' + bowerConfig['directory'] + '/phaser/build/phaser*',
+    './' + bowerConfig['directory'] + '/remark/out/*.js'
+  ];
+
+  return gulp.src(src)
     .pipe(ignore('*.ts'))
     .pipe(gulp.dest('./build/js/'));
 });
