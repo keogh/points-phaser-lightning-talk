@@ -102,12 +102,10 @@ function update() {
   var touchBound = false;
   enemies.forEachAlive(function (enemy) {
     if (direction == 1 && enemy.x > game.width - enemy.width) {
-      enemies.setAll('body.velocity.x', enemy.body.velocity.x * -1, true);
-      direction = -1; // LEFT
+      changePath(enemy.body.velocity.x);
       touchBound = true;
     } else if (direction == -1 && enemy.x < 0) {
-      enemies.setAll('body.velocity.x', enemy.body.velocity.x * -1, true);
-      direction = 1; // RIGHT
+      changePath(enemy.body.velocity.x);
       touchBound = true;
     }
 
@@ -125,10 +123,9 @@ function update() {
   });
 }
 
-function changePath(enemy) {
-  //debugger;
-  console.log('bla');
-  enemies.setAll('body.velocity.x', enemy.body.velocity.x * - 1, true);
+function changePath(initialVelocity) {
+  enemies.setAll('body.velocity.x', initialVelocity * - 1, true);
+  direction = direction * -1;
 }
 
 function fireBullet () {
