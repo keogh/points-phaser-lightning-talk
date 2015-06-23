@@ -70,7 +70,9 @@ function create() {
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
   cursors = game.input.keyboard.createCursorKeys();
-  game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+  //game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
+
+  fireKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
 function update() {
@@ -110,15 +112,17 @@ function update() {
     }
 
     if (touchBound) {
-      enemies.setAll('body.velocity.y', 50, true);
+      enemies.setAll('body.velocity.y', 80, true);
       downTime = game.time.now + 150;
       return false;
     }
   }, this);
 
-  if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-    fireBullet();
-  }
+  game.input.keyboard.addCallbacks(this, null, function (e) {
+    if (e.keyCode == Phaser.Keyboard.SPACEBAR) {
+      fireBullet();
+    }
+  });
 }
 
 function changePath(enemy) {
@@ -134,7 +138,7 @@ function fireBullet () {
     if (bullet) {
       bullet.reset(player.x + 45, player.y - 8);
       bullet.body.velocity.y = -300;
-      bulletTime = game.time.now + 150;
+      bulletTime = game.time.now + 500;
     }
   }
 }
