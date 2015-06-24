@@ -2,15 +2,13 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'asteroids-fall-again', {pre
 
 function preload() {
   game.load.image('player', '../assets/player.png');
-  game.load.image('asteroid', '../assets/asteroidBig.png');
   game.load.image('bullet', '../assets/laserRed.png');
   game.load.image('enemy', '../assets/enemyShip.png');
   game.load.image('laserGreen', '../assets/laserGreen.png');
 }
 
 var player;
-var bullets
-var asteroids;
+var bullets;
 
 var enemies;
 var enemiesTotal = 0;
@@ -28,14 +26,6 @@ var fireKey;
 
 function create() {
   game.stage.backgroundColor = "#000000";
-
-  asteroids = game.add.group();
-  asteroids.enableBody = true;
-  asteroids.physicsBodyType = Phaser.Physics.ARCADE;
-
-  // a = asteroids.create(game.world.randomX, Math.random() * 500, 'asteroid');
-  // a.name = 'as';
-  // a.body.immovable = true;
 
   bullets = game.add.group();
   bullets.enableBody = true;
