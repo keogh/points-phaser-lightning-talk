@@ -24,6 +24,7 @@ var bullet;
 var direction = 1;
 
 var pauseKey;
+var fireKey;
 
 function create() {
   game.stage.backgroundColor = "#000000";
@@ -75,6 +76,9 @@ function create() {
   
   pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
   pauseKey.onDown.add(togglePause, this);
+
+  fireKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  fireKey.onDown.add(fireBullet, this);
 }
 
 function update() {
@@ -117,12 +121,6 @@ function update() {
       return false;
     }
   }, this);
-
-  game.input.keyboard.addCallbacks(this, null, function (e) {
-    if (e.keyCode == Phaser.Keyboard.SPACEBAR) {
-      fireBullet();
-    }
-  });
 }
 
 function togglePause() {
