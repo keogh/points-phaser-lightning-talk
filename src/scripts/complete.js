@@ -52,9 +52,7 @@ function create() {
       var x = (i * enemyWidth) + (i * enemyDelta);
       var y = (j * enemyHeight) + (j * enemyDelta);
       var e = enemies.create(x, y, 'enemy');
-      // e.checkWorldBounds = true;
       e.body.velocity.x = 100;
-      // e.events.onOutOfBounds.add(changePath, this);
     }
   }
   enemiesTotal = enemies.countLiving();
@@ -77,10 +75,6 @@ function update() {
   player.body.velocity.x = 0;
   player.body.velocity.y = 0;
 
-  if (game.time.now > downTime) {
-    enemies.setAll('body.velocity.y', 0, true);
-  }
-
   if (cursors.left.isDown) {
     if (player.x <= 0) {
       player.x = 0;
@@ -93,6 +87,11 @@ function update() {
     } else {
       player.body.velocity.x = 300;
     }
+  }
+
+  if (downTime > 0 && game.time.now > downTime) {
+    enemies.setAll('body.velocity.y', 0, true);
+    downTime = 0;
   }
 
   var touchBound = false;
