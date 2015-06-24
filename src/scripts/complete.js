@@ -23,6 +23,8 @@ var bullet;
 
 var direction = 1;
 
+var pauseKey;
+
 function create() {
   game.stage.backgroundColor = "#000000";
 
@@ -70,9 +72,9 @@ function create() {
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
   cursors = game.input.keyboard.createCursorKeys();
-  //game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-
-  fireKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  
+  pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+  pauseKey.onDown.add(togglePause, this);
 }
 
 function update() {
@@ -121,6 +123,10 @@ function update() {
       fireBullet();
     }
   });
+}
+
+function togglePause() {
+  game.physics.arcade.isPaused = !game.physics.arcade.isPaused;
 }
 
 function changePath(initialVelocity) {
