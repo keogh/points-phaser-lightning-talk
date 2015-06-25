@@ -147,7 +147,9 @@ playState.prototype = (function () {
     }, this);
 
     var currentEnemiesTotal = enemies.countLiving();
-    if (enemiesTotal - currentEnemiesTotal >= 3) {
+    if (currentEnemiesTotal <= 0) {
+      this.game.state.restart('play', true, true);
+    } else if (enemiesTotal - currentEnemiesTotal >= 3) {
       var enemy = enemies.getFirstExists(true);
       if (enemy) {
         var velocity = enemy.body.velocity.x;
