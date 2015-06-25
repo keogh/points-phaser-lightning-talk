@@ -24,7 +24,7 @@ gulp.task('build:all', [
   'build:html',
   'build:slides',
   'build:js',
-  // 'build:css',
+  'build:css',
   'build:vendors'
 ]);
 
@@ -66,14 +66,11 @@ gulp.task('build:js', function () {
     .pipe(browserSync.reload({stream: true, once: true}));
 });
 
-// gulp.task('build:css', function () {
-//   return gulp.src('./src/stylesheets/*.styl')
-//     .pipe(stylus())
-//     .pipe(buffer())
-//     .pipe(gulpif(program.prod, cssmin()))
-//     .pipe(gulp.dest('./build/css/'))
-//     .pipe(browserSync.reload({stream: true}));
-// });
+gulp.task('build:css', function () {
+  return gulp.src('./src/stylesheets/**/*.css')
+    .pipe(gulp.dest('./build/css/'))
+    .pipe(browserSync.reload({stream: true}));
+});
 
 gulp.task('build:vendors', function () {
   var bowerConfig = JSON.parse(fs.readFileSync('./.bowerrc', 'utf8'));

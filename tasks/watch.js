@@ -14,5 +14,5 @@ gulp.task('watch', function () {
       './src/scripts/**/*.js'
     ], ['build:js'] // fck linter
   );
-  // gulp.watch('./src/stylesheets/*.scss', ['build:css']);
+  gulp.watch('./src/stylesheets/*.css', ['build:css']);
 });
