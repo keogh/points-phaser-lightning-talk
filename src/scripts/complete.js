@@ -130,7 +130,12 @@ playState.prototype = (function () {
     }
 
     var touchBound = false;
+    var that = this;
     enemies.forEachAlive(function (enemy) {
+      if (enemy.y + enemy.height > player.y) {
+        that.game.state.start('gameover');
+        return false;
+      }
       if (direction == 1 && enemy.x > this.game.width - enemy.width) {
         changePath(enemy.body.velocity.x);
         touchBound = true;
