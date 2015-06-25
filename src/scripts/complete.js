@@ -36,7 +36,7 @@ playState.prototype = (function () {
   var bulletTime = 0;
   var bullet;
 
-  var direction = 1;
+  var direction;
 
   var pauseKey;
   var fireKey;
@@ -51,6 +51,7 @@ playState.prototype = (function () {
   }
 
   function create() {
+    direction = 1;
     this.game.stage.backgroundColor = "#000000";
 
     bullets = this.game.add.group();
@@ -153,7 +154,7 @@ playState.prototype = (function () {
 
     var currentEnemiesTotal = enemies.countLiving();
     if (currentEnemiesTotal <= 0) {
-      this.game.state.restart('play', true, true);
+      this.game.state.start('play', true, true);
     } else if (enemiesTotal - currentEnemiesTotal >= 3) {
       var enemy = enemies.getFirstExists(true);
       if (enemy) {
