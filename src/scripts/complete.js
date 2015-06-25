@@ -41,6 +41,8 @@ playState.prototype = (function () {
   var pauseKey;
   var fireKey;
 
+  var gameInitialTime = 0; 
+
   function preload() {
     this.game.load.image('player', '../assets/player.png');
     this.game.load.image('bullet', '../assets/laserRed.png');
@@ -91,9 +93,18 @@ playState.prototype = (function () {
 
     fireKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     fireKey.onDown.add(fireBullet, this);
+
+    gameInitialTime = this.game.time.now;
+    this.game.physics.arcade.isPaused = true;
+    //console.log(gameInitialTime);
   }
 
   function update() {
+    if (gameInitialTime && this.game.time.now - gameInitialTime > 1500) {
+      this.game.physics.arcade.isPaused = false;
+      gameInitialTime = null;
+    }
+
     this.game.physics.arcade.overlap(bullets, enemies, collisionHandler, null, this);
 
     player.body.velocity.x = 0;
