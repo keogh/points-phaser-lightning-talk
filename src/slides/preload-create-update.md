@@ -24,3 +24,5 @@ function update() {
   // Collitions, movements, game logic
 }
 ```
+
+---
