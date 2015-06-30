@@ -1,16 +1,33 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>The Fallen Asteroids</title>
+    <title>The Fallen Invaders</title>
+    <style type="text/css">
+      iframe {
+        border: none;
+        width: 800px;
+        height: 600px;
+        overflow: hidden !important;
+      }
+
+      .bg-dark {
+        background-color: #333;
+      }
+    </style>
   </head>
 <body>
   <textarea id="source">
-    //= include slides/*.md
+    <!-- replace:slides -->
   </textarea>
 
   <script type="text/javascript" src="js/remark.min.js"></script>
   <script type="text/javascript">
-    var slideshow = remark.create();
+    var slideshow = remark.create({
+      navigation: {
+        scroll: false
+      },
+      slideNumberFormat: ''
+    });
   </script>
 </body>
 </html>

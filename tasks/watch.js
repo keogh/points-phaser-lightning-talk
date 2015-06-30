@@ -8,7 +8,7 @@ gulp.task('watch', function () {
   gulp.watch(['./assets/*.jpg', './assets/*.png'], ['build:images']);
 
   gulp.watch('./src/**/*.jade', ['build:html']);
-  gulp.watch('./src/index.jade', ['build:slides']);
+  gulp.watch(['./src/index.html', './src/slides.json', './src/slides/**/*.md'], ['build:slides']);
   gulp.watch(
     [
       './src/scripts/**/*.js'

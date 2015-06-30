@@ -11,6 +11,7 @@ var ignore = require('gulp-ignore');
 var inject = require('gulp-inject');
 var include = require('gulp-include');
 var imagemin = require('gulp-imagemin');
+var gReplace = require('gulp-replace');
 
 program
   .option('-p, --prod', 'enforce production environment')
@@ -83,10 +84,13 @@ gulp.task('build:vendors', function () {
 gulp.task('build:slides', function () {
   var slides = [];
   JSON.parse(fs.readFileSync('./src/slides.json', 'utf8')).slides.forEach(function (slide) {
-    slides.push('./src/slides/' + slide + '.md');
+    slides.push('slides/' + slide + '.md');
   });
 
+  var replacement = '//= include ' + JSON.stringify(slides);
+
   return gulp.src('./src/index.html')
+    .pipe(gReplace(/\<\!\-\- replace\:slides \-\-\>/, replacement))
     .pipe(include())
     .pipe(gulp.dest('./build/'))
     .pipe(browserSync.reload({stream: true}));
