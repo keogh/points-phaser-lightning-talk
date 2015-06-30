@@ -1,6 +1,31 @@
 {
   "slides": [
-    "01-slide",
-    "02-slide"
+    "title",
+    "phaser",
+    "index",
+    "game-cicle",
+    "preload-create-update",
+    "player",
+    "player-iframe",
+    "moving",
+    "moving-iframe",
+    "fire",
+    "fire-iframe",
+    "pause",
+    "pause-iframe",
+    "enemies",
+    "enemies-iframe",
+    "enemy-falling",
+    "enemy-falling-iframe",
+    "madafacas",
+    "madafacas-iframe",
+    "splash",
+    "splash-iframe",
+    "kill-all",
+    "kill-all-iframe",
+    "game-over",
+    "game-over-iframe",
+    "desktop",
+    "thanks"
   ]
 }
