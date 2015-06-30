@@ -1,3 +1,14 @@
 .remark-code {
   overflow: scroll;
 }
+
+iframe {
+  border: none;
+  width: 800px;
+  height: 600px;
+  overflow: hidden !important;
+}
+
+.bg-dark {
+  background-color: #333;
+}
