@@ -1,0 +1,19 @@
+@font-face {
+  font-family: fipps;
+  src: url(../assets/fonts/Fipps-Regular.otf);
+}
+
+@font-face {
+  font-family: minecraftia;
+  src: url(../assets/fonts/Minecraftia-Regular.ttf);
+}
+
+body {
+  font-family: minecraftia;
+}
+
+.hidden {
+  position: absolute;
+  visibility: hidden;
+  z-index: 0;
+}

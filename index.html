@@ -1,0 +1,611 @@
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>The Fallen Invaders</title>
+    <link rel="stylesheet" href="css/slides.css">
+  </head>
+<body>
+  <textarea id="source">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    # GameDev with Phaser.js
+    
+    ---
+    # Phaser.js
+    
+    <img src="assets/slides/phaser-logo.png">
+    
+    ---
+    # index.html
+    
+    ``` html
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title></title>
+      </head>
+      <body>
+        <div id="content"></div>
+        <script src="js/phaser.min.js"></script>
+        <script src="js/game.js"></script>
+      </body>
+    </html>
+    ```
+    
+    ---
+    # Game Cycle
+    
+    ![Game Cycle](assets/slides/gameloop.png)
+    
+    ---
+    # Preload, Create, Update
+    
+    ``` javascript
+    var game = new Phaser.Game(
+      800, 
+      600, 
+      Phaser.CANVAS, 
+      'falling-invaders', 
+      {
+        preload: preload, 
+        create: create, 
+        update: update
+      });
+    
+    function preload() {
+      // Load assets
+    }
+    
+    function create() {
+      // Initialize game
+    }
+    
+    function update() {
+      // Collitions, movements, game logic
+    }
+    ```
+    
+    ---
+    # The Player
+    
+    ``` javascript
+    function preload() {
+      game.load.image('player', '../assets/player.png');
+    }
+    
+    function create() {
+      game.stage.backgroundColor = "#000000";
+      player = game.add.sprite(350, 520, 'player');
+    }
+    
+    function update() {
+      // Collitions, movements, game logic
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/player.html">
+    
+    ---
+    # Moving the Player
+    
+    ``` javascript
+    var player, cursors;
+    
+    function create() {
+      ...  
+      player = game.add.sprite(350, 520, 'player');
+      game.physics.enable(player, Phaser.Physics.ARCADE);
+      cursors = game.input.keyboard.createCursorKeys();
+    }
+    
+    function update() {
+      player.body.velocity.x = 0;
+      player.body.velocity.y = 0;
+    
+      if (cursors.left.isDown) {
+        if (player.x <= 0) {
+          player.x = 0;
+        } else {
+          player.body.velocity.x = -350;
+        }
+      } else if (cursors.right.isDown) {
+        if (player.x + player.width >= game.width) {
+          player.x = game.width - player.width;
+        } else {
+          player.body.velocity.x = 350;
+        }
+      }
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/moving.html"></iframe>
+    
+    ---
+    # Fire!
+    
+    ``` javascript
+    ...
+    var bullets;
+    var bullet;
+    var bulletTime = 0;
+    
+    var fireKey;
+    
+    function preload() {
+      game.load.image('player', '../assets/player.png');
+      game.load.image('bullet', '../assets/laserRed.png');
+    }
+    
+    function create() {
+      ...
+    
+      bullets = game.add.group();
+      bullets.enableBody = true;
+      bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    
+      for (var i = 0; i < 20; i++) {
+        var b = bullets.create(0, 0, 'bullet');
+        b.name = 'bullet' + i;
+        b.exists = false;
+        b.visible = false;
+        b.checkWorldBounds = true;
+        b.events.onOutOfBounds.add(resetBullet, this);
+      }
+      
+      ...
+    
+      fireKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+      fireKey.onDown.add(fireBullet, this);
+    }
+    
+    function resetBullet(bullet) {
+      bullet.kill();
+    }
+    
+    function fireBullet () {
+      if (game.time.now > bulletTime) {
+        bullet = bullets.getFirstExists(false);
+    
+        if (bullet) {
+          bullet.reset(player.x + 45, player.y - 8);
+          bullet.body.velocity.y = -350;
+          bulletTime = game.time.now + 450;
+        }
+      }
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/fire.html"></iframe>
+    
+    ---
+    # Pause
+    
+    ``` javascript
+    ...
+    
+    var pauseKey;
+    
+    ...
+    
+    function create() {
+      ...
+    
+      pauseKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+      pauseKey.onDown.add(togglePause, this);
+    }
+    
+    ...
+    
+    function togglePause() {
+      game.physics.arcade.isPaused = !game.physics.arcade.isPaused;
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/pause.html"></iframe>
+    
+    ---
+    # The Enemies
+    
+    ``` javascript
+    ...
+    
+    var enemies;
+    
+    function preload() {
+      ...
+      game.load.image('enemy', '../assets/enemyShip.png');
+    }
+    
+    function create() {
+      ...
+    
+      enemies = game.add.group();
+      enemies.enableBody = true;
+      enemies.physicsBodyType = Phaser.Physics.ARCADE;
+    
+      var enemyWidth = 64, enemyHeight = 33, enemyDelta = 9;
+      for (var i = 0; i < 6; i++) {
+        for (var j = 0; j < 6; j++) {
+          var x = (i * enemyWidth) + (i * enemyDelta);
+          var y = (j * enemyHeight) + (j * enemyDelta);
+          var e = enemies.create(x, y, 'enemy');
+        }
+      }
+      
+      ...
+    }
+    
+    ...
+    
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/enemies.html"></iframe>
+    
+    ---
+    # Falling From the Skies
+    
+    ``` javascript
+    ...
+    
+    var downTime = 0;
+    var direction;
+    
+    ...
+    
+    function create() {
+      direction = 1;
+      ...
+    
+      for (var i = 0; i < 6; i++) {
+        for (var j = 0; j < 6; j++) {
+          var x = (i * enemyWidth) + (i * enemyDelta);
+          var y = (j * enemyHeight) + (j * enemyDelta);
+          var e = enemies.create(x, y, 'enemy');
+    *      e.body.velocity.x = 100;
+        }
+      }
+      
+      ...
+    }
+    
+    function update() {
+      ...
+    
+      if (downTime > 0 && game.time.now > downTime) {
+        enemies.setAll('body.velocity.y', 0, true);
+        downTime = 0;
+      }
+    
+      enemies.forEachAlive(function (enemy) {
+        if (direction == 1 && enemy.x > game.width - enemy.width
+         || direction == -1 && enemy.x < 0) {
+          changePath(enemy.body.velocity.x);
+          enemies.setAll('body.velocity.y', 80, true);
+          downTime = game.time.now + 150;
+          return false; 
+        }
+      }, this);
+    }
+    
+    ...
+    
+    function changePath(initialVelocity) {
+      enemies.setAll('body.velocity.x', initialVelocity * - 1, true);
+      direction = direction * -1;
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/enemy-falling.html"></iframe>
+    
+    ---
+    # Kill the Madafacas!
+    
+    ``` javascript
+    ...
+    
+    function update() {
+      game.physics.arcade.overlap(bullets, enemies, collisionHandler, null, this);
+    
+      ...
+    }
+    
+    ...
+    
+    function collisionHandler(bullet, enemy) {
+      bullet.kill();
+      enemy.kill();
+    }
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/madafacas.html"></iframe>
+    
+    ---
+    # Speed the Madafacas!
+    
+    ``` javascript
+    ...
+    
+    var enemiesTotal = 0;
+    
+    ...
+    
+    function create() {
+      ...
+    
+      enemies = this.game.add.group();
+      ...
+      enemiesTotal = enemies.countLiving();
+      
+      ...
+    }
+    
+    function update() {
+      ...
+    
+      var currentEnemiesTotal = enemies.countLiving();
+      if (currentEnemiesTotal <= 0) {
+        // End Level
+      } else if (enemiesTotal - currentEnemiesTotal >= 3) {
+        var enemy = enemies.getFirstExists(true);
+        if (enemy) {
+          var velocity = enemy.body.velocity.x;
+          if (velocity > 0) {        
+            enemies.setAll('body.velocity.x', velocity + 30, true);
+          } else {
+            enemies.setAll('body.velocity.x', velocity - 30, true);
+          }
+        }
+        enemiesTotal = currentEnemiesTotal;
+      }
+    }
+    
+    ...
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/speed.html"></iframe>
+    
+    ---
+    # Splash Screen
+    
+    ``` javascript
+    var splashState = function (game){}
+    splashState.prototype = (function () {
+      function create() {
+        var style = { font: "35px arial", fill: "#00ff00", align: "center" };
+        var text = this.game.add.text(
+          this.game.world.centerX,
+          this.game.world.centerY,
+          "Falling Invaders",
+          style
+        );
+    
+        text.anchor.set(0.5);
+        this.input.onDown.add(startGame, this);
+      }
+    
+      function startGame() {
+          this.game.state.start('play');
+      }
+    
+      return {
+        create: create
+      }
+    })();
+    
+    var playState = function (game) {}
+    playState.prototype = (function () {
+      var player;
+      ...
+    
+      function preload() {
+    *   this.game.load.image('player', '../assets/player.png');
+        ...
+      }
+    
+      function create() {
+        ...
+    
+    *   this.game.physics.enable(player, Phaser.Physics.ARCADE);
+    
+        ...
+      }
+    
+      function update() {
+        ...
+      }
+    
+      ...
+    
+      return {
+        preload: preload,
+        create: create,
+        update: update
+      };
+    })();
+    
+    var game = new Phaser.Game(
+      800, 
+      600, 
+      Phaser.CANVAS, 
+      'falling-invaders');
+    
+    game.state.add('splash', splashState)
+    game.state.add('play', playState);
+    game.state.start('splash');
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/splash.html"></iframe>
+    
+    ---
+    # Did you kill them all?
+    
+    ``` javascript
+    ...
+    
+    var playState = function (game) {}
+    playState.prototype = (function () {
+      ...
+    
+      function update() {
+        ...
+    
+        var currentEnemiesTotal = enemies.countLiving();
+        if (currentEnemiesTotal <= 0) {
+    *     this.game.state.start('play', true, true);
+        } else if (enemiesTotal - currentEnemiesTotal >= 3) {
+          var enemy = enemies.getFirstExists(true);
+          if (enemy) {
+            var velocity = enemy.body.velocity.x;
+            if (velocity > 0) {        
+              enemies.setAll('body.velocity.x', velocity + 30, true);
+            } else {
+              enemies.setAll('body.velocity.x', velocity - 30, true);
+            }
+          }
+          enemiesTotal = currentEnemiesTotal;
+        }
+    
+      }
+    
+      ...
+    })();
+    
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'falling-invaders');
+    
+    game.state.add('splash', splashState)
+    game.state.add('play', playState);
+    game.state.start('splash');
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/kill-all.html"></iframe>
+    
+    ---
+    # Game Over
+    
+    ``` javascript
+    ...
+    playState.prototype = (function () {
+      ...
+    
+      function update() {
+        ...
+    *   var that = this;
+        enemies.forEachAlive(function (enemy) {
+          if (enemy.y + enemy.height > player.y) {
+            that.game.state.start('gameover');
+            return false;
+          }
+          ...
+        }, this);
+    
+        ...
+      }
+    
+      ...
+    })();
+    
+    var gameOverState = function (game){}
+    gameOverState.prototype = (function () {
+      function create() {
+        var style = { font: "35px arial", fill: "#FFFFFF", align: "center" };
+        var text = this.game.add.text(
+          this.game.world.centerX,
+          this.game.world.centerY,
+          "GAME OVER",
+          style
+        );
+    
+        text.anchor.set(0.5);
+        this.input.onDown.add(restartGame, this);
+      }
+    
+      function restartGame() {
+          this.game.state.start('splash');
+      }
+    
+      return {
+        create: create
+      }
+    })();
+    
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'falling-invaders');
+    
+    game.state.add('splash', splashState)
+    game.state.add('play', playState);
+    *game.state.add('gameover', gameOverState);
+    game.state.start('splash');
+    ```
+    
+    ---
+    class: bg-dark
+    
+    <iframe scrolling="no" src="phases/game-over.html"></iframe>
+    
+    ---
+    # Going Desktop
+    
+    ![electron-logo](assets/slides/electron.png)
+    
+    ---
+    # Thanks
+    
+    **Done with:** HTML/JavaScript/CSS, [remark.js](http://remarkjs.com/), [phaser.js](http://phaser.io/), [gulp](http://gulpjs.com/)
+    
+    **Slides:**
+    
+    **Slides Source:** https://github.com/keogh/points-phaser-lightning-talk
+    
+    **Informal Penguins:** https://github.com/InformalPenguins
+    
+    <img src="assets/slides/informalpenguins.jpg" border="0" alt="Informal Penguins Logo" width="300px" />
+
+  </textarea>
+
+  <script type="text/javascript" src="js/remark.min.js"></script>
+  <script type="text/javascript">
+    var slideshow = remark.create({
+      navigation: {
+        scroll: false
+      },
+      slideNumberFormat: ''
+    });
+  </script>
+</body>
+</html>

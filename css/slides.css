@@ -1,0 +1,15 @@
+.remark-code {
+  overflow: auto;
+  max-height: 530px;
+}
+
+iframe {
+  border: none;
+  width: 810px;
+  height: 610px;
+  overflow: hidden !important;
+}
+
+.bg-dark {
+  background-color: #333;
+}
