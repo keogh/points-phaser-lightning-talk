@@ -13,6 +13,7 @@
     "commander": "^2.8.1",
     "gulp": "^3.9.0",
     "gulp-buffer": "0.0.2",
+    "gulp-gh-pages": "^0.5.2",
     "gulp-ignore": "^1.2.1",
     "gulp-imagemin": "^2.3.0",
     "gulp-include": "^1.1.1",
