@@ -7,3 +7,5 @@ dist/
 build/
 
 src/script.md
+
+.publish/
